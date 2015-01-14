@@ -13,6 +13,7 @@ import java.io.UnsupportedEncodingException;
 
 /**
  * Created by yoshi on 2015/01/10.
+ *
  */
 public class SdcardReader {
 
@@ -22,21 +23,27 @@ public class SdcardReader {
     //ストリームから読み込み、バイト配列で返す
     public static final byte[] readStream(InputStream inputStream, int readLength) throws IOException {
 
-        final ByteArrayOutputStream byteStream = new ByteArrayOutputStream();    //一時バッファのように使う
-        final byte[] bytes = new byte[readLength];    //read() 毎に読み込むバッファ
+        //一時バッファのように使う
+        final ByteArrayOutputStream byteStream = new ByteArrayOutputStream();
+        //read() 毎に読み込むバッファ
+        final byte[] bytes = new byte[readLength];
         final BufferedInputStream bis = new BufferedInputStream(inputStream, readLength);
 
         try {
             int len = 0;
             while ((len = bis.read(bytes, 0, readLength)) > 0) {
-                byteStream.write(bytes, 0, len);    //ストリームバッファに溜め込む
+                //ストリームバッファに溜め込む
+                byteStream.write(bytes, 0, len);
             }
-            return byteStream.toByteArray();    //byte[] に変換
+            //byte[] に変換
+            return byteStream.toByteArray();
 
         } finally {
             try {
-                byteStream.reset();     //すべてのデータを破棄
-                bis.close();            //ストリームを閉じる
+                //すべてのデータを破棄
+                byteStream.reset();
+                //ストリームを閉じる
+                bis.close();
             } catch (Exception e) {
                 //IOException
             }
@@ -59,9 +66,11 @@ public class SdcardReader {
     public static final boolean isMountSDCard() {
         String state = Environment.getExternalStorageState();
         if (state.equals(Environment.MEDIA_MOUNTED)) {
-            return true;   //マウントされている
+            //マウントされている
+            return true;
         } else {
-            return false;  //マウントされていない
+            //マウントされていない
+            return false;
         }
     }
 
@@ -82,9 +91,8 @@ public class SdcardReader {
         if (!isMountSDCard()) {  //マウント状態のチェック
             throw new IOException("No Mount");
         }
-        String absPath = toSDCardAbsolutePath("sample.txt");  //SDCard 内の絶対パスに変換
-        //InputStream is = new FileInputStream(absPath);
-        File file = new File(fileName);
+        //SDCard 内の絶対パスに変換
+        String absPath = toSDCardAbsolutePath(fileName);
         InputStream is = new FileInputStream(absPath);
         return loadText(is, DEFAULT_ENCORDING);
     }

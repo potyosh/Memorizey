@@ -17,7 +17,7 @@ import sdcard.SdcardReader;
 
 public class MainActivity extends ActionBarActivity {
 
-    private String fileName = "/sdcard/temp/sample.txt";
+    private String fileName = "Download/english_words.json";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -35,14 +35,13 @@ public class MainActivity extends ActionBarActivity {
             }
         });
 
-        TextView myText = (TextView) findViewById(R.id.textView2);
-        myText.setText("hyooooooooo");
-
         try {
             text = SdcardReader.loadTextSDCard(fileName);
         } catch (IOException e) {
             e.printStackTrace();
         }
+        TextView myText = (TextView) findViewById(R.id.textView2);
+        myText.setText(text);
         Log.d("tag", text);
         //System.out.println("hogegegegeg"+fileName);
 
