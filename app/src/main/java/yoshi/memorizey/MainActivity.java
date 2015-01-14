@@ -10,9 +10,13 @@ import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.io.IOException;
 
 import sdcard.SdcardReader;
+import util.JsonUtil;
 
 
 public class MainActivity extends ActionBarActivity {
@@ -35,14 +39,28 @@ public class MainActivity extends ActionBarActivity {
             }
         });
 
+
         try {
             text = SdcardReader.loadTextSDCard(fileName);
         } catch (IOException e) {
             e.printStackTrace();
         }
+
         TextView myText = (TextView) findViewById(R.id.textView2);
         myText.setText(text);
         Log.d("tag", text);
+
+        JsonUtil jsonUtil;
+        JSONObject jsonObject;
+        try {
+            jsonUtil = new JsonUtil(fileName);
+            jsonObject = jsonUtil.getJsonObject();
+            Log.d("json", jsonObject.toString(4));
+        } catch (IOException e) {
+            e.printStackTrace();
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
         //System.out.println("hogegegegeg"+fileName);
 
     }
