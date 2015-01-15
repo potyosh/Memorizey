@@ -21,7 +21,9 @@ import util.JsonUtil;
 
 public class MainActivity extends ActionBarActivity {
 
-    private String fileName = "Download/english_words.json";
+    private String mfileName = "Download/english_words2.json";
+    private JsonUtil mjsonUtil;
+    private JSONObject mjsonObject = null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -31,17 +33,8 @@ public class MainActivity extends ActionBarActivity {
         Button button = (Button) findViewById(R.id.yoshiButton);
         String text = null;
 
-        button.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Toast.makeText(MainActivity.this, "aaa",
-                        Toast.LENGTH_SHORT).show();
-            }
-        });
-
-
         try {
-            text = SdcardReader.loadTextSDCard(fileName);
+            text = SdcardReader.loadTextSDCard(mfileName);
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -50,12 +43,11 @@ public class MainActivity extends ActionBarActivity {
         myText.setText(text);
         Log.d("tag", text);
 
-        JsonUtil jsonUtil;
-        JSONObject jsonObject;
+
         try {
-            jsonUtil = new JsonUtil(fileName);
-            jsonObject = jsonUtil.getJsonObject();
-            Log.d("json", jsonObject.toString(4));
+            mjsonUtil = new JsonUtil(mfileName);
+            mjsonObject = mjsonUtil.getJsonObject();
+            Log.d("json", mjsonObject.toString(4));
         } catch (IOException e) {
             e.printStackTrace();
         } catch (JSONException e) {
@@ -63,6 +55,18 @@ public class MainActivity extends ActionBarActivity {
         }
         //System.out.println("hogegegegeg"+fileName);
 
+        button.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                try {
+                    Toast.makeText(MainActivity.this, mjsonObject.getString("english"),
+                            Toast.LENGTH_SHORT).show();
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+
+            }
+        });
     }
 
 
