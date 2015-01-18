@@ -13,6 +13,7 @@ import java.io.UnsupportedEncodingException;
 
 /**
  * Created by yoshi on 2015/01/10.
+ * SD Cardにアクセスするためのクラス
  *
  */
 public class SdcardReader {

@@ -12,22 +12,19 @@ import sdcard.SdcardReader;
 
 /**
  * Created by yoshi on 2015/01/14.
+ * Json取得、参照の為のクラス
  */
 public class JsonUtil {
     private JSONObject mJsonObject;
     private JSONArray mJsonArray;
     public JsonUtil(String argUri) throws IOException, JSONException {
         String strJson = SdcardReader.loadTextSDCard(argUri);
-
         mJsonObject = new JSONObject(strJson);
         mJsonArray = mJsonObject.getJSONArray("words");
-
-        Log.d("tag", mJsonArray.getJSONObject(0).getString("english"));
-        Log.d("tag", mJsonArray.getJSONObject(0).getString("japanese"));
-        Log.d("tag", argUri);
     }
 
     public JSONObject getJsonObject(){
         return mJsonObject;
     }
+    public JSONArray getJsonArray(){ return mJsonArray; }
 }

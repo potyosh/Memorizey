@@ -2,7 +2,6 @@ package yoshi.memorizey;
 
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -10,12 +9,11 @@ import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import org.json.JSONArray;
 import org.json.JSONException;
-import org.json.JSONObject;
 
 import java.io.IOException;
 
-import sdcard.SdcardReader;
 import util.JsonUtil;
 
 
@@ -23,44 +21,50 @@ public class MainActivity extends ActionBarActivity {
 
     private String mfileName = "Download/english_words2.json";
     private JsonUtil mjsonUtil;
-    private JSONObject mjsonObject = null;
+    private JSONArray mJsonArray;
+    private int mWordIndex = 0;
+    private String mQText;
+    private String mAText;
+    private Button mNextButton;
+    private TextView mQTextView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        Button button = (Button) findViewById(R.id.yoshiButton);
-        String text = null;
-
-        try {
-            text = SdcardReader.loadTextSDCard(mfileName);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-
-        TextView myText = (TextView) findViewById(R.id.textView2);
-        myText.setText(text);
-        Log.d("tag", text);
+        //ボタン、テキストを初期化
+        mNextButton = (Button) findViewById(R.id.nextButton);
+        mQTextView = (TextView) findViewById(R.id.questionText);
 
 
+        //パスを参照しJsonを取得
         try {
             mjsonUtil = new JsonUtil(mfileName);
-            mjsonObject = mjsonUtil.getJsonObject();
-            Log.d("json", mjsonObject.toString(4));
+            mJsonArray = mjsonUtil.getJsonArray();
         } catch (IOException e) {
             e.printStackTrace();
         } catch (JSONException e) {
             e.printStackTrace();
         }
-        //System.out.println("hogegegegeg"+fileName);
 
-        button.setOnClickListener(new View.OnClickListener() {
+        //初回はゼロ番の問題を取得し表示する
+        //TODO より汎用的に使いたいのでenglishにするのはよくないかも
+        try {
+            mQText = mJsonArray.getJSONObject(0).getString("english");
+            mQTextView.setText(mQText);
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
+        //ボタンクリック時、問題を次へ移す
+        mNextButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 try {
-                    Toast.makeText(MainActivity.this, mjsonObject.getString("english"),
-                            Toast.LENGTH_SHORT).show();
+                    mQText = mJsonArray.getJSONObject(mWordIndex).getString("english");
+                    mQTextView.setText(mQText);
+                    mWordIndex += 1;
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
@@ -91,4 +95,5 @@ public class MainActivity extends ActionBarActivity {
 
         return super.onOptionsItemSelected(item);
     }
+
 }
