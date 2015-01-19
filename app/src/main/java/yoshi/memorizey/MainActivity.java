@@ -27,6 +27,7 @@ public class MainActivity extends ActionBarActivity {
     private String mAText;
     private Button mNextButton;
     private TextView mQTextView;
+    private Button mPrevButton;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -35,6 +36,7 @@ public class MainActivity extends ActionBarActivity {
 
         //ボタン、テキストを初期化
         mNextButton = (Button) findViewById(R.id.nextButton);
+        mPrevButton = (Button) findViewById(R.id.prevButton);
         mQTextView = (TextView) findViewById(R.id.questionText);
 
 
@@ -49,7 +51,7 @@ public class MainActivity extends ActionBarActivity {
         }
 
         //初回はゼロ番の問題を取得し表示する
-        //TODO より汎用的に使いたいのでenglishにするのはよくないかも
+        //TODO より汎用的に使いたいのでJsonのフォーマットをenglishにするのはよくないかも
         try {
             mQText = mJsonArray.getJSONObject(0).getString("english");
             mQTextView.setText(mQText);
@@ -57,7 +59,7 @@ public class MainActivity extends ActionBarActivity {
             e.printStackTrace();
         }
 
-        //ボタンクリック時、問題を次へ移す
+        //Nextボタン実装
         mNextButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -65,6 +67,26 @@ public class MainActivity extends ActionBarActivity {
                     mQText = mJsonArray.getJSONObject(mWordIndex).getString("english");
                     mQTextView.setText(mQText);
                     mWordIndex += 1;
+                    if(mWordIndex >= mJsonArray.length()){
+                        mWordIndex = 0;
+                    }
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+
+            }
+        });
+
+        mPrevButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                try {
+                    mQText = mJsonArray.getJSONObject(mWordIndex).getString("english");
+                    mQTextView.setText(mQText);
+                    mWordIndex -= 1;
+                    if(mWordIndex < 0){
+                        mWordIndex = mJsonArray.length() - 1;
+                    }
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
