@@ -20,7 +20,7 @@ public class JsonUtil {
     public JsonUtil(String argUri) throws IOException, JSONException {
         String strJson = SdcardReader.loadTextSDCard(argUri);
         mJsonObject = new JSONObject(strJson);
-        mJsonArray = mJsonObject.getJSONArray("data");
+        mJsonArray = mJsonObject.getJSONArray("words");
     }
 
     public JSONObject getJsonObject(){
