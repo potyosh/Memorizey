@@ -51,7 +51,6 @@ public class MainActivity extends ActionBarActivity {
         }
 
         //初回はゼロ番の問題を取得し表示する
-        //TODO より汎用的に使いたいのでJsonのフォーマットをenglishにするのはよくないかも
         try {
             mQText = mJsonArray.getJSONObject(0).getString("Question");
             mQTextView.setText(mQText);
