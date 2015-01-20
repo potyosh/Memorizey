@@ -19,7 +19,7 @@ import util.JsonUtil;
 
 public class MainActivity extends ActionBarActivity {
 
-    private String mfileName = "Download/english_words2.json";
+    private String mfileName = "word/english_words2.json";
     private JsonUtil mjsonUtil;
     private JSONArray mJsonArray;
     private int mWordIndex = 0;
@@ -51,9 +51,8 @@ public class MainActivity extends ActionBarActivity {
         }
 
         //初回はゼロ番の問題を取得し表示する
-        //TODO より汎用的に使いたいのでJsonのフォーマットをenglishにするのはよくないかも
         try {
-            mQText = mJsonArray.getJSONObject(0).getString("english");
+            mQText = mJsonArray.getJSONObject(0).getString("Question");
             mQTextView.setText(mQText);
         } catch (JSONException e) {
             e.printStackTrace();
@@ -64,7 +63,7 @@ public class MainActivity extends ActionBarActivity {
             @Override
             public void onClick(View v) {
                 try {
-                    mQText = mJsonArray.getJSONObject(mWordIndex).getString("english");
+                    mQText = mJsonArray.getJSONObject(mWordIndex).getString("Question");
                     mQTextView.setText(mQText);
                     mWordIndex += 1;
                     if(mWordIndex >= mJsonArray.length()){
@@ -81,7 +80,7 @@ public class MainActivity extends ActionBarActivity {
             @Override
             public void onClick(View v) {
                 try {
-                    mQText = mJsonArray.getJSONObject(mWordIndex).getString("english");
+                    mQText = mJsonArray.getJSONObject(mWordIndex).getString("Question");
                     mQTextView.setText(mQText);
                     mWordIndex -= 1;
                     if(mWordIndex < 0){
