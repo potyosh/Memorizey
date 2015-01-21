@@ -28,6 +28,8 @@ public class MainActivity extends ActionBarActivity {
     private Button mNextButton;
     private TextView mQTextView;
     private Button mPrevButton;
+    private Button mFlipButton;
+    private String mfliped = "Question";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -38,7 +40,7 @@ public class MainActivity extends ActionBarActivity {
         mNextButton = (Button) findViewById(R.id.nextButton);
         mPrevButton = (Button) findViewById(R.id.prevButton);
         mQTextView = (TextView) findViewById(R.id.questionText);
-
+        mFlipButton = (Button) findViewById(R.id.flipButton);
 
         //パスを参照しJsonを取得
         try {
@@ -63,7 +65,7 @@ public class MainActivity extends ActionBarActivity {
             @Override
             public void onClick(View v) {
                 try {
-                    mQText = mJsonArray.getJSONObject(mWordIndex).getString("Question");
+                    mQText = mJsonArray.getJSONObject(mWordIndex).getString(mfliped);
                     mQTextView.setText(mQText);
                     mWordIndex += 1;
                     if(mWordIndex >= mJsonArray.length()){
@@ -76,11 +78,12 @@ public class MainActivity extends ActionBarActivity {
             }
         });
 
+        //Prevボタン実装
         mPrevButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 try {
-                    mQText = mJsonArray.getJSONObject(mWordIndex).getString("Question");
+                    mQText = mJsonArray.getJSONObject(mWordIndex).getString(mfliped);
                     mQTextView.setText(mQText);
                     mWordIndex -= 1;
                     if(mWordIndex < 0){
@@ -90,6 +93,25 @@ public class MainActivity extends ActionBarActivity {
                     e.printStackTrace();
                 }
 
+            }
+        });
+
+        //Flipボタン実装
+        mFlipButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(mfliped.equals("Question")){
+                    mfliped = "Answer";
+                }else if(mfliped.equals(("Answer"))){
+                    mfliped = "Question";
+                }
+
+                try {
+                    mQText = mJsonArray.getJSONObject(mWordIndex).getString(mfliped);
+                    mQTextView.setText(mQText);
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
             }
         });
     }

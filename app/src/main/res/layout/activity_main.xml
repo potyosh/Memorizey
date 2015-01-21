@@ -35,4 +35,15 @@
         android:layout_alignTop="@+id/nextButton"
         android:layout_toLeftOf="@+id/questionText"
         android:layout_toStartOf="@+id/questionText" />
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Flip"
+        android:id="@+id/flipButton"
+        android:layout_centerVertical="true"
+        android:layout_alignRight="@+id/nextButton"
+        android:layout_alignEnd="@+id/nextButton"
+        android:layout_alignLeft="@+id/prevButton"
+        android:layout_alignStart="@+id/prevButton" />
 </RelativeLayout>
