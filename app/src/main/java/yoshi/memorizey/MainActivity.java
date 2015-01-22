@@ -65,12 +65,12 @@ public class MainActivity extends ActionBarActivity {
             @Override
             public void onClick(View v) {
                 try {
-                    mQText = mJsonArray.getJSONObject(mWordIndex).getString(mfliped);
-                    mQTextView.setText(mQText);
                     mWordIndex += 1;
                     if(mWordIndex >= mJsonArray.length()){
                         mWordIndex = 0;
                     }
+                    mQText = mJsonArray.getJSONObject(mWordIndex).getString(mfliped);
+                    mQTextView.setText(mQText);
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
@@ -83,12 +83,12 @@ public class MainActivity extends ActionBarActivity {
             @Override
             public void onClick(View v) {
                 try {
-                    mQText = mJsonArray.getJSONObject(mWordIndex).getString(mfliped);
-                    mQTextView.setText(mQText);
                     mWordIndex -= 1;
                     if(mWordIndex < 0){
                         mWordIndex = mJsonArray.length() - 1;
                     }
+                    mQText = mJsonArray.getJSONObject(mWordIndex).getString(mfliped);
+                    mQTextView.setText(mQText);
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
