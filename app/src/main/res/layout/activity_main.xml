@@ -46,4 +46,13 @@
         android:layout_alignEnd="@+id/nextButton"
         android:layout_alignLeft="@+id/prevButton"
         android:layout_alignStart="@+id/prevButton" />
+
+    <CheckBox
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Memorized!!"
+        android:id="@+id/memorizedCheckBox"
+        android:layout_below="@+id/questionText"
+        android:layout_toRightOf="@+id/nextButton"
+        android:layout_toEndOf="@+id/nextButton" />
 </RelativeLayout>

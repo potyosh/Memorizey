@@ -2,10 +2,12 @@ package yoshi.memorizey;
 
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
+import android.widget.CheckBox;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -20,16 +22,23 @@ import util.JsonUtil;
 public class MainActivity extends ActionBarActivity {
 
     private String mfileName = "word/english_words2.json";
+
     private JsonUtil mjsonUtil;
+
     private JSONArray mJsonArray;
+
     private int mWordIndex = 0;
+
     private String mQText;
     private String mAText;
+    private String mfliped = "Question";
+
     private Button mNextButton;
-    private TextView mQTextView;
     private Button mPrevButton;
     private Button mFlipButton;
-    private String mfliped = "Question";
+    private CheckBox mMemorizedCheckBox;
+
+    private TextView mQTextView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -41,6 +50,7 @@ public class MainActivity extends ActionBarActivity {
         mPrevButton = (Button) findViewById(R.id.prevButton);
         mQTextView = (TextView) findViewById(R.id.questionText);
         mFlipButton = (Button) findViewById(R.id.flipButton);
+        mMemorizedCheckBox = (CheckBox) findViewById(R.id.memorizedCheckBox);
 
         //パスを参照しJsonを取得
         try {
@@ -60,6 +70,17 @@ public class MainActivity extends ActionBarActivity {
             e.printStackTrace();
         }
 
+        //CheckBox実装
+        mMemorizedCheckBox.setOnClickListener(new View.OnClickListener() {
+            @Override
+            // チェックボックスがクリックされた時に呼び出されます
+            public void onClick(View v) {
+                CheckBox checkBox = (CheckBox) v;
+                // チェックボックスのチェック状態を取得します
+                boolean checked = checkBox.isChecked();
+                Log.d("hoge", String.valueOf(checked));
+            }
+        });
         //Nextボタン実装
         mNextButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -100,18 +121,18 @@ public class MainActivity extends ActionBarActivity {
         mFlipButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(mfliped.equals("Question")){
-                    mfliped = "Answer";
-                }else if(mfliped.equals(("Answer"))){
-                    mfliped = "Question";
-                }
+            if(mfliped.equals("Question")){
+                mfliped = "Answer";
+            }else if(mfliped.equals(("Answer"))){
+                mfliped = "Question";
+            }
 
-                try {
-                    mQText = mJsonArray.getJSONObject(mWordIndex).getString(mfliped);
-                    mQTextView.setText(mQText);
-                } catch (JSONException e) {
-                    e.printStackTrace();
-                }
+            try {
+                mQText = mJsonArray.getJSONObject(mWordIndex).getString(mfliped);
+                mQTextView.setText(mQText);
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
             }
         });
     }
