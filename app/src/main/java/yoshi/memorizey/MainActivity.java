@@ -1,5 +1,7 @@
 package yoshi.memorizey;
 
+import android.app.Activity;
+import android.os.Environment;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -10,16 +12,18 @@ import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.TextView;
 import android.widget.Toast;
+import yoshi.memorizey.FileDialogActivity.OnFileSelectDialogListener;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 
+import java.io.File;
 import java.io.IOException;
 
 import util.JsonUtil;
 
 
-public class MainActivity extends ActionBarActivity {
+public class MainActivity extends ActionBarActivity implements OnFileSelectDialogListener {
 
     private String mfileName = "word/english_words2.json";
 
@@ -39,6 +43,12 @@ public class MainActivity extends ActionBarActivity {
     private CheckBox mMemorizedCheckBox;
 
     private TextView mQTextView;
+
+    //ファイル選択時動作実装
+    @Override
+    public void onClickFileSelect(File file) {
+
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -154,6 +164,14 @@ public class MainActivity extends ActionBarActivity {
 
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_settings) {
+            return true;
+        }else if(id == R.id.action_file){
+            // ファイル選択ダイアログを表示
+            FileDialogActivity dialog = new FileDialogActivity(this);
+            dialog.setOnFileSelectDialogListener(this);
+
+            // 表示
+            dialog.show(Environment.getExternalStorageDirectory().getPath());
             return true;
         }
 

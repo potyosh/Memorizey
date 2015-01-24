@@ -7,5 +7,6 @@
     <string name="action_settings">Settings</string>
     <!--<string name="nextButton">Next</string>-->
     <string name="Next">Next</string>
+    <string name="action_file">File</string>
 
 </resources>
