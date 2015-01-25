@@ -18,7 +18,7 @@ public class JsonUtil {
     private JSONObject mJsonObject;
     private JSONArray mJsonArray;
     public JsonUtil(String argUri) throws IOException, JSONException {
-        String strJson = SdcardReader.loadTextSDCard(argUri);
+        String strJson = SdcardReader.loadTextSDCardAbsPath(argUri);
         mJsonObject = new JSONObject(strJson);
         mJsonArray = mJsonObject.getJSONArray("data");
     }

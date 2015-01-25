@@ -1,6 +1,7 @@
 package sdcard;
 
 import android.os.Environment;
+import android.util.Log;
 
 import java.io.BufferedInputStream;
 import java.io.ByteArrayOutputStream;
@@ -89,12 +90,31 @@ public class SdcardReader {
 
     // SDCard から、テキストファイルを読み込む(Android 用)
     public static final String loadTextSDCard(String fileName) throws IOException {
-        if (!isMountSDCard()) {  //マウント状態のチェック
+        if (!isMountSDCard()) {
+            //マウント状態のチェック
             throw new IOException("No Mount");
         }
         //SDCard 内の絶対パスに変換
         String absPath = toSDCardAbsolutePath(fileName);
         InputStream is = new FileInputStream(absPath);
+        Log.d("SD card loaded", absPath);
+        return loadText(is, DEFAULT_ENCORDING);
+    }
+
+    /**
+     * SDCard から、テキストファイルを読み込む(Android 用)
+     * @param fileName ファイルの絶対パス
+     * @return ファイル文字列
+     * @throws IOException
+     */
+    public static final String loadTextSDCardAbsPath(String fileName) throws IOException {
+        //マウント状態のチェック
+        if (!isMountSDCard()) {
+            throw new IOException("No Mount");
+        }
+
+        InputStream is = new FileInputStream(fileName);
+        Log.d("SD card loaded", fileName);
         return loadText(is, DEFAULT_ENCORDING);
     }
 }

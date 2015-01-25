@@ -1,6 +1,6 @@
 package yoshi.memorizey;
 
-import android.app.Activity;
+import android.content.Intent;
 import android.os.Environment;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
@@ -11,7 +11,6 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.TextView;
-import android.widget.Toast;
 import yoshi.memorizey.FileDialogActivity.OnFileSelectDialogListener;
 
 import org.json.JSONArray;
@@ -25,7 +24,7 @@ import util.JsonUtil;
 
 public class MainActivity extends ActionBarActivity implements OnFileSelectDialogListener {
 
-    private String mfileName = "word/english_words2.json";
+    private static String mfileName = "/storage/emulated/0/word/english_words3.json";
 
     private JsonUtil mjsonUtil;
 
@@ -47,7 +46,9 @@ public class MainActivity extends ActionBarActivity implements OnFileSelectDialo
     //ファイル選択時動作実装
     @Override
     public void onClickFileSelect(File file) {
-
+        Log.d("File", file.getPath());
+        mfileName = file.getPath();
+        reload();
     }
 
     @Override
@@ -88,9 +89,10 @@ public class MainActivity extends ActionBarActivity implements OnFileSelectDialo
                 CheckBox checkBox = (CheckBox) v;
                 // チェックボックスのチェック状態を取得します
                 boolean checked = checkBox.isChecked();
-                Log.d("hoge", String.valueOf(checked));
+                Log.d("Checkbox tapped", String.valueOf(checked));
             }
         });
+
         //Nextボタン実装
         mNextButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -178,4 +180,13 @@ public class MainActivity extends ActionBarActivity implements OnFileSelectDialo
         return super.onOptionsItemSelected(item);
     }
 
+    public void reload() {
+        Intent intent = getIntent();
+        overridePendingTransition(0, 0);
+        intent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
+        finish();
+
+        overridePendingTransition(0, 0);
+        startActivity(intent);
+    }
 }
