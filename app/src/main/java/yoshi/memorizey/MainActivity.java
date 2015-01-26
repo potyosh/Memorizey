@@ -24,7 +24,7 @@ import util.JsonUtil;
 
 public class MainActivity extends ActionBarActivity implements OnFileSelectDialogListener {
 
-    private static String mfileName = "/storage/emulated/0/word/english_words3.json";
+    private static String mfileName = "/storage/emulated/0/word/english_words1.json";
 
     private JsonUtil mjsonUtil;
 
@@ -35,6 +35,7 @@ public class MainActivity extends ActionBarActivity implements OnFileSelectDialo
     private String mQText;
     private String mAText;
     private String mfliped = "Question";
+    private String mChecked;
 
     private Button mNextButton;
     private Button mPrevButton;
@@ -43,7 +44,7 @@ public class MainActivity extends ActionBarActivity implements OnFileSelectDialo
 
     private TextView mQTextView;
 
-    //ファイル選択時動作実装
+    //File Selected
     @Override
     public void onClickFileSelect(File file) {
         Log.d("File", file.getPath());
@@ -56,14 +57,14 @@ public class MainActivity extends ActionBarActivity implements OnFileSelectDialo
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        //ボタン、テキストを初期化
+        //Initialize button and text.
         mNextButton = (Button) findViewById(R.id.nextButton);
         mPrevButton = (Button) findViewById(R.id.prevButton);
         mQTextView = (TextView) findViewById(R.id.questionText);
         mFlipButton = (Button) findViewById(R.id.flipButton);
         mMemorizedCheckBox = (CheckBox) findViewById(R.id.memorizedCheckBox);
 
-        //パスを参照しJsonを取得
+        //Get the json file
         try {
             mjsonUtil = new JsonUtil(mfileName);
             mJsonArray = mjsonUtil.getJsonArray();
@@ -73,10 +74,13 @@ public class MainActivity extends ActionBarActivity implements OnFileSelectDialo
             e.printStackTrace();
         }
 
-        //初回はゼロ番の問題を取得し表示する
+        //Initially, start from zero.
         try {
             mQText = mJsonArray.getJSONObject(0).getString("Question");
             mQTextView.setText(mQText);
+            //Get check status
+            mChecked = mJsonArray.getJSONObject(mWordIndex).getString("Check");
+            setCheckBox(mChecked);
         } catch (JSONException e) {
             e.printStackTrace();
         }
@@ -98,12 +102,21 @@ public class MainActivity extends ActionBarActivity implements OnFileSelectDialo
             @Override
             public void onClick(View v) {
                 try {
+
+                    //Go to next
                     mWordIndex += 1;
+                    //Going to first, when over the array length
                     if(mWordIndex >= mJsonArray.length()){
                         mWordIndex = 0;
                     }
+
+                    //Get question or answer
                     mQText = mJsonArray.getJSONObject(mWordIndex).getString(mfliped);
                     mQTextView.setText(mQText);
+                    //Get and set check status
+                    mChecked = mJsonArray.getJSONObject(mWordIndex).getString("Check");
+                    setCheckBox(mChecked);
+
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
@@ -116,12 +129,18 @@ public class MainActivity extends ActionBarActivity implements OnFileSelectDialo
             @Override
             public void onClick(View v) {
                 try {
+                    //Go previous
                     mWordIndex -= 1;
+                    //Go the end of data
                     if(mWordIndex < 0){
                         mWordIndex = mJsonArray.length() - 1;
                     }
+                    //Get question or answer
                     mQText = mJsonArray.getJSONObject(mWordIndex).getString(mfliped);
                     mQTextView.setText(mQText);
+                    //Get and set check status
+                    mChecked = mJsonArray.getJSONObject(mWordIndex).getString("Check");
+                    setCheckBox(mChecked);
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
@@ -180,7 +199,7 @@ public class MainActivity extends ActionBarActivity implements OnFileSelectDialo
         return super.onOptionsItemSelected(item);
     }
 
-    public void reload() {
+    private void reload() {
         Intent intent = getIntent();
         overridePendingTransition(0, 0);
         intent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
@@ -188,5 +207,13 @@ public class MainActivity extends ActionBarActivity implements OnFileSelectDialo
 
         overridePendingTransition(0, 0);
         startActivity(intent);
+    }
+
+    private void setCheckBox(String status){
+        if(status.equals("true")){
+            mMemorizedCheckBox.setChecked(true);
+        }else{
+            mMemorizedCheckBox.setChecked(false);
+        }
     }
 }
