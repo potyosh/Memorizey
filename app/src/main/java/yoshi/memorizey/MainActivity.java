@@ -15,6 +15,7 @@ import yoshi.memorizey.FileDialogActivity.OnFileSelectDialogListener;
 
 import org.json.JSONArray;
 import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.io.File;
 import java.io.IOException;
@@ -85,7 +86,7 @@ public class MainActivity extends ActionBarActivity implements OnFileSelectDialo
             e.printStackTrace();
         }
 
-        //CheckBox実装
+        //CheckBox implementation
         mMemorizedCheckBox.setOnClickListener(new View.OnClickListener() {
             @Override
             // チェックボックスがクリックされた時に呼び出されます
@@ -93,6 +94,12 @@ public class MainActivity extends ActionBarActivity implements OnFileSelectDialo
                 CheckBox checkBox = (CheckBox) v;
                 // チェックボックスのチェック状態を取得します
                 boolean checked = checkBox.isChecked();
+                // Set json data
+                try {
+                    mJsonArray.getJSONObject(mWordIndex).put("Check", checked);
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
                 Log.d("Checkbox tapped", String.valueOf(checked));
             }
         });
