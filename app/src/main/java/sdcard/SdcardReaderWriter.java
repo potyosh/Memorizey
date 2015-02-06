@@ -4,23 +4,31 @@ import android.os.Environment;
 import android.util.Log;
 
 import java.io.BufferedInputStream;
+import java.io.BufferedOutputStream;
+import java.io.BufferedReader;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.FileReader;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.OutputStream;
+import java.io.PrintWriter;
 import java.io.UnsupportedEncodingException;
 
 /**
  * Created by yoshi on 2015/01/10.
  * SD Cardにアクセスするためのクラス
- *
  */
-public class SdcardReader {
+public class SdcardReaderWriter {
 
     private static final String DEFAULT_ENCORDING = "UTF-8";
-    private static final int DEFAULT_READ_LENGTH = 8192;
+    private static final int DEFAULT_BUFF_LENGTH = 8192;
+    private static final int DEFAULT_READ_LENGTH = DEFAULT_BUFF_LENGTH;
+    private static final int DEFAULT_WRITE_LENGTH = DEFAULT_BUFF_LENGTH;
 
     //ストリームから読み込み、バイト配列で返す
     public static final byte[] readStream(InputStream inputStream, int readLength) throws IOException {
@@ -50,6 +58,19 @@ public class SdcardReader {
                 //IOException
             }
         }
+    }
+
+    public static void writeStream(OutputStream outputStream, String writeString, int writeLength) throws IOException {
+
+        //一時バッファのように使う
+        final ByteArrayOutputStream byteStream = new ByteArrayOutputStream();
+        //write() 毎に読み込むバッファ
+        final byte[] bytes = new byte[writeLength];
+        final BufferedOutputStream bis = new BufferedOutputStream(outputStream, writeLength);
+        final PrintWriter writer = new PrintWriter(outputStream);
+        writer.append(writeString);
+        writer.close();
+
     }
 
     //ストリームから読み込み、テキストエンコードして返す
@@ -103,18 +124,62 @@ public class SdcardReader {
 
     /**
      * SDCard から、テキストファイルを読み込む(Android 用)
-     * @param fileName ファイルの絶対パス
+     *
+     * @param filePath ファイルの絶対パス
      * @return ファイル文字列
      * @throws IOException
      */
-    public static final String loadTextSDCardAbsPath(String fileName) throws IOException {
+    public static final String loadTextSDCardAbsPath(String filePath) throws IOException {
         //マウント状態のチェック
         if (!isMountSDCard()) {
             throw new IOException("No Mount");
         }
 
-        InputStream is = new FileInputStream(fileName);
-        Log.d("SD card loaded", fileName);
+        InputStream is = new FileInputStream(filePath);
+        Log.d("SD card loaded", filePath);
         return loadText(is, DEFAULT_ENCORDING);
+    }
+
+    public static void writeTextSDcardAbsPath(String filePath, String writeString) throws IOException {
+        File writeFile = new File(filePath);
+        //Check the mount state
+        if (!isMountSDCard()) {
+            throw new IOException("No Mount");
+        }
+
+        createFile(writeFile, writeString);
+
+    }
+
+    public static void createFile(File file, String writeText) {
+        try {
+            file.createNewFile();
+            if (file.canWrite()) {
+                FileWriter fw = new FileWriter(file);
+                fw.append(writeText);
+                fw.close();
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+    }
+
+    public static void readFile(File file) {
+        if (file.exists() && file.canRead()) {
+            BufferedReader br = null;
+            try {
+                br = new BufferedReader(new FileReader(file));
+                String body;
+                if ((body = br.readLine()) != null) {
+                    Log.i("readFile", "テキストファイルから読み込んだ文字列: " + body);
+                }
+                br.close();
+            } catch (FileNotFoundException e) {
+                e.printStackTrace();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
     }
 }

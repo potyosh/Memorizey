@@ -11,20 +11,24 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.TextView;
+
 import yoshi.memorizey.FileDialogActivity.OnFileSelectDialogListener;
 
 import org.json.JSONArray;
 import org.json.JSONException;
-import org.json.JSONObject;
 
 import java.io.File;
 import java.io.IOException;
+import java.io.OutputStream;
+
 
 import util.JsonUtil;
 
 
 public class MainActivity extends ActionBarActivity implements OnFileSelectDialogListener {
 
+    private static final String EXTERNAL_STORAGE_PATH = "/storage/sdcard0";
+    private static final String PACKAGE_NAME = MainActivity.class.getPackage().getName();
     private static String mfileName = "/storage/emulated/0/word/english_words1.json";
 
     private JsonUtil mjsonUtil;
@@ -44,6 +48,8 @@ public class MainActivity extends ActionBarActivity implements OnFileSelectDialo
     private CheckBox mMemorizedCheckBox;
 
     private TextView mQTextView;
+
+    private OutputStream mOutputStream;
 
     //File Selected
     @Override
@@ -86,25 +92,35 @@ public class MainActivity extends ActionBarActivity implements OnFileSelectDialo
             e.printStackTrace();
         }
 
-        //CheckBox implementation
+        // CheckBox implementation
         mMemorizedCheckBox.setOnClickListener(new View.OnClickListener() {
             @Override
             // チェックボックスがクリックされた時に呼び出されます
             public void onClick(View v) {
                 CheckBox checkBox = (CheckBox) v;
-                // チェックボックスのチェック状態を取得します
+                // Get the check box state.
                 boolean checked = checkBox.isChecked();
                 // Set json data
                 try {
                     mJsonArray.getJSONObject(mWordIndex).put("Check", checked);
+
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
-                Log.d("Checkbox tapped", String.valueOf(checked));
+
+                try {
+                    //json書き込み
+                    mjsonUtil.fileWriteJsonString(mJsonArray.toString(4));
+                } catch (IOException e) {
+                    e.printStackTrace();
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+
             }
         });
 
-        //Nextボタン実装
+        //Next button implementation
         mNextButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -113,7 +129,7 @@ public class MainActivity extends ActionBarActivity implements OnFileSelectDialo
                     //Go to next
                     mWordIndex += 1;
                     //Going to first, when over the array length
-                    if(mWordIndex >= mJsonArray.length()){
+                    if (mWordIndex >= mJsonArray.length()) {
                         mWordIndex = 0;
                     }
 
@@ -139,7 +155,7 @@ public class MainActivity extends ActionBarActivity implements OnFileSelectDialo
                     //Go previous
                     mWordIndex -= 1;
                     //Go the end of data
-                    if(mWordIndex < 0){
+                    if (mWordIndex < 0) {
                         mWordIndex = mJsonArray.length() - 1;
                     }
                     //Get question or answer
@@ -159,18 +175,18 @@ public class MainActivity extends ActionBarActivity implements OnFileSelectDialo
         mFlipButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-            if(mfliped.equals("Question")){
-                mfliped = "Answer";
-            }else if(mfliped.equals(("Answer"))){
-                mfliped = "Question";
-            }
+                if (mfliped.equals("Question")) {
+                    mfliped = "Answer";
+                } else if (mfliped.equals(("Answer"))) {
+                    mfliped = "Question";
+                }
 
-            try {
-                mQText = mJsonArray.getJSONObject(mWordIndex).getString(mfliped);
-                mQTextView.setText(mQText);
-            } catch (JSONException e) {
-                e.printStackTrace();
-            }
+                try {
+                    mQText = mJsonArray.getJSONObject(mWordIndex).getString(mfliped);
+                    mQTextView.setText(mQText);
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
             }
         });
     }
@@ -193,7 +209,7 @@ public class MainActivity extends ActionBarActivity implements OnFileSelectDialo
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_settings) {
             return true;
-        }else if(id == R.id.action_file){
+        } else if (id == R.id.action_file) {
             // ファイル選択ダイアログを表示
             FileDialogActivity dialog = new FileDialogActivity(this);
             dialog.setOnFileSelectDialogListener(this);
@@ -216,10 +232,10 @@ public class MainActivity extends ActionBarActivity implements OnFileSelectDialo
         startActivity(intent);
     }
 
-    private void setCheckBox(String status){
-        if(status.equals("true")){
+    private void setCheckBox(String status) {
+        if (status.equals("true")) {
             mMemorizedCheckBox.setChecked(true);
-        }else{
+        } else {
             mMemorizedCheckBox.setChecked(false);
         }
     }

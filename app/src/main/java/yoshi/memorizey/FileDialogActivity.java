@@ -17,19 +17,29 @@ import android.content.DialogInterface.OnClickListener;
  */
 public class FileDialogActivity extends Activity implements OnClickListener {
 
-    /** アクティビティ */
+    /**
+     * アクティビティ
+     */
     private Activity activity = null;
 
-    /** リスナー */
+    /**
+     * リスナー
+     */
     private OnFileSelectDialogListener listener = null;
 
-    /** 対象となる拡張子 */
+    /**
+     * 対象となる拡張子
+     */
     private String extension = "";
 
-    /** 表示中のファイル情報リスト */
+    /**
+     * 表示中のファイル情報リスト
+     */
     private List<File> viewFileDataList = null;
 
-    /** 表示パスの履歴 */
+    /**
+     * 表示パスの履歴
+     */
     private List<String> viewPathHistory = null;
 
     /**
@@ -46,7 +56,7 @@ public class FileDialogActivity extends Activity implements OnClickListener {
     /**
      * コントラクト
      *
-     * @param activity アクティビティ
+     * @param activity  アクティビティ
      * @param extension 対象となる拡張子
      */
     public FileDialogActivity(Activity activity, String extension) {
@@ -60,7 +70,7 @@ public class FileDialogActivity extends Activity implements OnClickListener {
      * 選択イベント
      *
      * @param dialog ダイアログ
-     * @param which 選択位置
+     * @param which  選択位置
      */
     @Override
     public void onClick(DialogInterface dialog, int which) {

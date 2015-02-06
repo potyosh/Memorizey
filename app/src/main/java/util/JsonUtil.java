@@ -8,7 +8,7 @@ import org.json.JSONObject;
 
 import java.io.IOException;
 
-import sdcard.SdcardReader;
+import sdcard.SdcardReaderWriter;
 
 /**
  * Created by yoshi on 2015/01/14.
@@ -17,14 +17,19 @@ import sdcard.SdcardReader;
 public class JsonUtil {
     private JSONObject mJsonObject;
     private JSONArray mJsonArray;
+    private String mFileUri;
     public JsonUtil(String argUri) throws IOException, JSONException {
-        String strJson = SdcardReader.loadTextSDCardAbsPath(argUri);
-        mJsonObject = new JSONObject(strJson);
-        mJsonArray = mJsonObject.getJSONArray("data");
+        String strJson = SdcardReaderWriter.loadTextSDCardAbsPath(argUri);
+        mFileUri = argUri;
+        //mJsonObject = new JSONObject(strJson);
+        mJsonArray = new JSONArray(strJson);
     }
 
     public JSONObject getJsonObject(){
         return mJsonObject;
     }
     public JSONArray getJsonArray(){ return mJsonArray; }
+    public void fileWriteJsonString(String writeString) throws IOException {
+        SdcardReaderWriter.writeTextSDcardAbsPath(mFileUri, writeString);
+    }
 }
